@@ -1,0 +1,19 @@
+{
+  "name": "Badr Quran Studio",
+  "short_name": "Badr Quran",
+  "description": "Crée, personnalise et programme des Reels Coran.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#06110d",
+  "theme_color": "#06110d",
+  "orientation": "portrait",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
