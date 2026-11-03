@@ -8,6 +8,8 @@ pipeline/.env.*
 backend/.env
 *.pem
 *.key
+*.keystore
+*.jks
 
 # ---------------------------------------------------------------------------
 # Médias lourds (non versionnés)

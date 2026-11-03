@@ -11,24 +11,31 @@ android {
         applicationId = "com.badr.quranstudio"
         minSdk = 26
         targetSdk = 36
-        versionCode = 3
-        versionName = "1.0.2"
+        versionCode = 4
+        versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
+        // Le keystore est fourni par la CI via des secrets (KEYSTORE_BASE64).
+        // En local, les valeurs par défaut du keystore de debug prennent le relais.
+        val keystoreFile = file("${rootDir}/debug.keystore")
+        val keystorePassword = System.getenv("KEYSTORE_PASSWORD") ?: "android"
+        val keyAliasName = System.getenv("KEY_ALIAS") ?: "androiddebugkey"
+        val keyPasswordValue = System.getenv("KEY_PASSWORD") ?: "android"
+
         create("release") {
-            storeFile = file("${rootDir}/debug.keystore")
-            storePassword = "android"
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
+            storeFile = keystoreFile
+            storePassword = keystorePassword
+            keyAlias = keyAliasName
+            keyPassword = keyPasswordValue
         }
         create("debugConfig") {
-            storeFile = file("${rootDir}/debug.keystore")
-            storePassword = "android"
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
+            storeFile = keystoreFile
+            storePassword = keystorePassword
+            keyAlias = keyAliasName
+            keyPassword = keyPasswordValue
         }
     }
 
