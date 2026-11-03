@@ -30,8 +30,8 @@ Téléphone (APK)  ──HTTPS──►  API FastAPI (VPS)  ──►  pipeline 
   ce n'est pas l'application livrée
 - `.github/workflows/build-apk.yml` : construit l'APK à chaque push sur `main`
 
-Le code du serveur (pipeline + API FastAPI + documentation) se trouve dans le dépôt
-[`solver492/badr-quran-reels-studio`](https://github.com/solver492/badr-quran-reels-studio).
+Le code du serveur (pipeline + API FastAPI + documentation) se trouve dans le dépôt privé
+`solver492/badr-quran-reels-studio` (accès sur demande).
 
 ## Installation
 
