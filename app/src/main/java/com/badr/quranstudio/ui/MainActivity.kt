@@ -5,7 +5,10 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -34,9 +37,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -469,4 +474,35 @@ private fun copyToClipboard(context: Context, share: ShareInfo) {
     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     clipboard.setPrimaryClip(ClipData.newPlainText("Reel Badr Quran", shareText(share)))
     Toast.makeText(context, "Légende copiée", Toast.LENGTH_SHORT).show()
+}
+
+/**
+ * Point d'entrée de l'application (déclaré dans AndroidManifest.xml).
+ * Sans cette classe, Android lève ActivityNotFoundException au lancement.
+ */
+class MainActivity : ComponentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            MaterialTheme(
+                colorScheme = darkColorScheme(
+                    primary = Palette.Gold,
+                    onPrimary = Color(0xFF1A1407),
+                    secondary = Palette.Success,
+                    onSecondary = Palette.Text,
+                    background = Palette.Bg,
+                    onBackground = Palette.Text,
+                    surface = Palette.Surface,
+                    onSurface = Palette.Text,
+                    surfaceVariant = Palette.SurfaceHigh,
+                    onSurfaceVariant = Palette.Muted,
+                    error = Palette.Error,
+                    onError = Palette.Text,
+                )
+            ) {
+                BadrQuranStudioApp()
+            }
+        }
+    }
 }

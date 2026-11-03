@@ -50,6 +50,24 @@ jobs:
         run: |
           ls -lh app/build/outputs/apk/debug/app-debug.apk
 
+      - name: Verify launcher activity is present in APK
+        run: |
+          python3 - <<'PY'
+          import sys, zipfile
+
+          apk = "app/build/outputs/apk/debug/app-debug.apk"
+          needle = b"Lcom/badr/quranstudio/ui/MainActivity;"
+          with zipfile.ZipFile(apk) as z:
+              dex_files = [n for n in z.namelist() if n.startswith("classes") and n.endswith(".dex")]
+              found = [n for n in dex_files if needle in z.read(n)]
+
+          print("dex files:", dex_files)
+          print("launcher activity found in:", found)
+          if not found:
+              print("ERREUR: .ui.MainActivity absente de l'APK -> crash au lancement", file=sys.stderr)
+              sys.exit(1)
+          PY
+
       - name: Upload APK as Artifact
         uses: actions/upload-artifact@v4
         with:
