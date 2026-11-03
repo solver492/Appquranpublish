@@ -19,7 +19,7 @@ class Prefs(context: Context) {
         }
 
     companion object {
-        const val DEFAULT_BASE_URL = "http://72.62.210.165:8100/api"
+        const val DEFAULT_BASE_URL = "https://badr.72-62-210-165.sslip.io/api"
         private const val KEY_BASE_URL = "base_url"
         private const val KEY_TOKEN = "api_token"
     }

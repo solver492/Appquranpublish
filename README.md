@@ -20,7 +20,7 @@ paramètres au serveur, suit la progression du rendu FFmpeg, puis récupère la 
 ## Architecture
 
 ```
-Téléphone (APK)  ──HTTP──►  API FastAPI (VPS)  ──►  pipeline FFmpeg  ──►  MP4
+Téléphone (APK)  ──HTTPS──►  API FastAPI (VPS)  ──►  pipeline FFmpeg  ──►  MP4
                                     │
                                     └──►  TryPost  ──►  page Facebook
 ```
@@ -39,7 +39,7 @@ Le code du serveur (pipeline + API FastAPI + documentation) se trouve dans le d�
 2. Télécharger l'artefact `badr-quran-studio-debug-apk`, le dézipper, installer `app-debug.apk`
    (autoriser « Installer des applications inconnues » pour le navigateur ou le gestionnaire de fichiers).
 3. Lancer l'application, aller dans **Réglages**.
-4. Vérifier l'URL de l'API (préremplie) puis coller le **jeton d'accès** fourni par l'administrateur.
+4. Vérifier l'URL de l'API — préremplie avec `https://badr.72-62-210-165.sslip.io/api` — puis coller le **jeton d'accès** fourni par l'administrateur.
 5. Appuyer sur **Tester** : le voyant doit passer au vert « Connecté au serveur ».
 
 Le jeton n'est **jamais** dans le code : il est saisi par l'utilisateur et stocké uniquement dans les
@@ -58,6 +58,7 @@ La compilation est aussi automatisée par GitHub Actions ; l'APK de debug est si
 
 ## Sécurité
 
+- Transport chiffré de bout en bout (TLS Let's Encrypt, renouvellement automatique par Certbot).
 - Aucun secret versionné : ni jeton API, ni clé TryPost, ni identifiant de page Facebook.
 - L'API refuse toute requête sans `Authorization: Bearer <jeton>` (401).
 - Les fichiers `.env`, `local.properties`, `.gradle/` et les keystores sont ignorés par Git.
