@@ -1,69 +1,66 @@
-# Badr Quran Studio
+# Badr Quran Studio — application Android
 
-Application mobile pour la création, la personnalisation et la programmation de Reels Coran pour la page **Badr Quran — بدر القرآنيات**.
+Application Android (Jetpack Compose) qui pilote réellement le pipeline de Reels Coran de la page
+**Badr Quran — بدر القرآنيات** : génération de la vidéo, choix du récitateur, de l'arrière-plan,
+du style de sous-titres et du logo, partage, publication Facebook et programmation quotidienne.
 
-L'application transforme un verset du Coran en Reel vertical (format 9:16) :
-- Texte arabe RTL avec **surlignage mot par mot doré** ou ligne par ligne
-- Traduction française synchronisée
-- Choix de 7 récitations de référence (Yasser Ad-Dussary, Sudais, Al Qasim, etc.)
-- Choix parmi 8 arrière-plans nature immersifs (vagues, mer & rochers, forêt, cascade, nuages, prairie)
-- Incrustation de logo transparent ou animé WebM
-- Prévisualisation interactive dynamique mot par mot sur maquette de smartphone 9:16
-- Partage natif (Web Share API, Facebook, WhatsApp, copier le texte)
-- Programmation quotidienne alignée sur les 5 prières canoniques (Fajr, Dhuhr, Asr, Maghrib, Isha)
-- Mode démonstration autonome avec persistance locale (localStorage) et bascule vers API distante FastAPI
+Contrairement à la maquette initiale, **tout passe par l'API réelle** : l'application envoie les
+paramètres au serveur, suit la progression du rendu FFmpeg, puis récupère la vidéo produite.
 
-## Fonctionnalités
+## Ce que fait l'application
 
-1. **Accueil (Dashboard)** :
-   - Prochain créneau de publication calculé en temps réel avec compte à rebours
-   - Statistiques globales (reels générés, reels publiés, progression du Coran)
-   - Accès rapide aux derniers Reels générés et aperçu de la légende
-2. **Studio de création** :
-   - Choix de la Sourate, du verset de départ et du nombre de versets
-   - Bouton « Prochain » pour reprendre automatiquement la lecture séquentielle
-   - Sélection de la durée (30s / 60s)
-   - Sélection du récitateur avec nom arabe et français
-   - Sélection du fond vidéo / photo nature
-   - 5 styles de sous-titrage (mot par mot doré, ligne par ligne, verset entier, bilingue renforcé, minimal)
-   - Incrustation et personnalisation du filigrane / watermark
-   - Aperçu interactif avec animation de lecture au clic
-   - Génération avec barre de progression temps réel
-3. **Planning & Prières** :
-   - Visualisation des 5 créneaux de prière du jour (horaire de l'adhan et de publication)
-   - Configuration de la marge de sécurité (ex. 10 min avant l'adhan)
-   - Activation / désactivation par créneau
-   - Navigation jour par jour
-4. **Bibliothèque de Reels** :
-   - Filtrage (Tous, Publiés, À publier)
-   - Fiches détaillées avec durées et badges d'état
-   - Fiche de partage complète (partage direct, Facebook, WhatsApp, copie)
-   - Publication instantanée
-5. **Réglages** :
-   - Configuration de l'URL du serveur API backend
-   - Identifiants de page Facebook
-   - Ville et pays de calcul des horaires de prière
-   - Mode démo interactif sécurisé
+| Écran | Fonctions réelles |
+|---|---|
+| **Accueil** | Prochain créneau calculé depuis les horaires de prière du serveur, compte à rebours, statistiques (Reels générés, publiés, prochain verset), derniers Reels |
+| **Studio** | Sourate, verset de départ, nombre de versets, durée 30/60 s, 7 récitateurs, 8 arrière-plans, 5 styles de sous-titres, 5 logos (dont « aucun »), traduction FR, filigrane, aperçu 9:16, génération avec progression en direct |
+| **Planning** | 5 créneaux (Fajr, Dhuhr, Asr, Maghrib, Isha), heure de l'adhan et de publication, marge de sécurité réglable, activation/désactivation par créneau, navigation jour par jour |
+| **Reels** | Bibliothèque réelle, filtres (tous / publiés / à publier), partage, publication immédiate |
+| **Réglages** | URL de l'API, jeton d'accès, ville/pays, marge, état de la connexion |
 
-## Démarrage
+## Architecture
 
-```bash
-# Installation des dépendances
-npm install
-
-# Lancement du serveur de développement (port 3000)
-npm run dev
-
-# Vérification du build de production
-npm run build
+```
+Téléphone (APK)  ──HTTP──►  API FastAPI (VPS)  ──►  pipeline FFmpeg  ──►  MP4
+                                    │
+                                    └──►  TryPost  ──►  page Facebook
 ```
 
-## Structure du projet
+- `app/` : application Android (Kotlin, Compose, OkHttp, `org.json` — aucune dépendance de sérialisation)
+- `src/`, `index.html`, `public/` : export web d'AI Studio, conservé comme maquette de référence ;
+  ce n'est pas l'application livrée
+- `.github/workflows/build-apk.yml` : construit l'APK à chaque push sur `main`
 
-- `src/` : Composants React, écrans (`HomeScreen`, `StudioScreen`, `ScheduleScreen`, `LibraryScreen`, `SettingsScreen`), types et API client
-- `public/` : Ressources statiques (fonds nature, logos, icônes SVG, manifest)
-- `metadata.json` : Métadonnées AI Studio
-- `docs/` : Documentation technique et produit
+Le code du serveur (pipeline + API FastAPI + documentation) se trouve dans le dépôt
+[`solver492/badr-quran-reels-studio`](https://github.com/solver492/badr-quran-reels-studio).
+
+## Installation
+
+1. Ouvrir l'onglet **Actions** du dépôt, dernier workflow « Build Android APK » réussi.
+2. Télécharger l'artefact `badr-quran-studio-debug-apk`, le dézipper, installer `app-debug.apk`
+   (autoriser « Installer des applications inconnues » pour le navigateur ou le gestionnaire de fichiers).
+3. Lancer l'application, aller dans **Réglages**.
+4. Vérifier l'URL de l'API (préremplie) puis coller le **jeton d'accès** fourni par l'administrateur.
+5. Appuyer sur **Tester** : le voyant doit passer au vert « Connecté au serveur ».
+
+Le jeton n'est **jamais** dans le code : il est saisi par l'utilisateur et stocké uniquement dans les
+`SharedPreferences` du téléphone.
+
+## Compiler soi-même
+
+```bash
+# Prérequis : JDK 21 et Android SDK (compileSdk 36)
+./gradlew :app:assembleDebug
+# APK : app/build/outputs/apk/debug/app-debug.apk
+```
+
+La compilation est aussi automatisée par GitHub Actions ; l'APK de debug est signé avec un
+`debug.keystore` généré à la volée par le workflow.
+
+## Sécurité
+
+- Aucun secret versionné : ni jeton API, ni clé TryPost, ni identifiant de page Facebook.
+- L'API refuse toute requête sans `Authorization: Bearer <jeton>` (401).
+- Les fichiers `.env`, `local.properties`, `.gradle/` et les keystores sont ignorés par Git.
 
 ## Licence
 

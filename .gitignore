@@ -3,10 +3,8 @@
 # ---------------------------------------------------------------------------
 .env
 .env.*
-!.env.example
 pipeline/.env
 pipeline/.env.*
-!pipeline/.env.example
 backend/.env
 *.pem
 *.key
@@ -62,6 +60,10 @@ pnpm-debug.log*
 # ---------------------------------------------------------------------------
 # Éditeurs
 # ---------------------------------------------------------------------------
+.gradle/
+local.properties
+*.jks
+*.keystore
 .vscode/
 .idea/
 *.swp
