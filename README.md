@@ -35,12 +35,15 @@ Le code du serveur (pipeline + API FastAPI + documentation) se trouve dans le d�
 
 ## Installation
 
-1. Ouvrir l'onglet **Actions** du dépôt, dernier workflow « Build Android APK » réussi.
-2. Télécharger l'artefact `badr-quran-studio-debug-apk`, le dézipper, installer `app-debug.apk`
+1. Télécharger l'APK de la dernière version :
+   [**badr-quran-studio-debug.apk**](https://github.com/solver492/Appquranpublish/releases/latest/download/badr-quran-studio-debug.apk)
    (autoriser « Installer des applications inconnues » pour le navigateur ou le gestionnaire de fichiers).
-3. Lancer l'application, aller dans **Réglages**.
-4. Vérifier l'URL de l'API — préremplie avec `https://badr.72-62-210-165.sslip.io/api` — puis coller le **jeton d'accès** fourni par l'administrateur.
-5. Appuyer sur **Tester** : le voyant doit passer au vert « Connecté au serveur ».
+2. Lancer l'application, aller dans **Réglages**.
+3. Vérifier l'URL de l'API — préremplie avec `https://badr.72-62-210-165.sslip.io/api` — puis coller le **jeton d'accès** fourni par l'administrateur.
+4. Appuyer sur **Tester** : le voyant doit passer au vert « Connecté au serveur ».
+
+Si une version antérieure signée avec une autre clé est installée, la désinstaller une fois avant
+d'installer celle-ci. Les mises à jour suivantes s'installent normalement par-dessus.
 
 Le jeton n'est **jamais** dans le code : il est saisi par l'utilisateur et stocké uniquement dans les
 `SharedPreferences` du téléphone.
@@ -53,8 +56,10 @@ Le jeton n'est **jamais** dans le code : il est saisi par l'utilisateur et stock
 # APK : app/build/outputs/apk/debug/app-debug.apk
 ```
 
-La compilation est aussi automatisée par GitHub Actions ; l'APK de debug est signé avec un
-`debug.keystore` généré à la volée par le workflow.
+La compilation est aussi automatisée par GitHub Actions. La clé de signature est conservée dans les
+secrets du dépôt (`KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`) afin que
+chaque version puisse s'installer par-dessus la précédente. Sans ces secrets, le workflow retombe sur
+un keystore de debug généré à la volée.
 
 ## Sécurité
 
